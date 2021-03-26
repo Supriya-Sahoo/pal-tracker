@@ -30,12 +30,13 @@ bootRun.environment([
         "WELCOME_MESSAGE": "howdy",
         "SPRING_DATASOURCE_URL": developmentDbUrl,
         "MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE": "*",
+        "MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS": "always",
+        "MANAGEMENT_HEALTH_PROBES_ENABLED": true
 ])
 
 def testDbUrl = "jdbc:mysql://localhost:3306/tracker_test?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 test.environment([
         "WELCOME_MESSAGE": "Hello from test",
-
         "SPRING_DATASOURCE_URL": testDbUrl,
         "MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE": "*",
 ])
@@ -46,8 +47,10 @@ flyway {
     password = ""
     locations = ["filesystem:databases/tracker/migrations"]
 }
-
 task testMigrate(type: FlywayMigrateTask) {
     url = testDbUrl
+}
+springBoot {
+    buildInfo()
 }
 
